@@ -4,220 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CubaDial</title>
-
-  <!-- Favicon SVG embebido -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23002a8f'/><rect x='0' y='0' width='100' height='50' fill='%23ffffff'/><path d='M30,25 L70,25 L70,35 L30,35 Z' fill='%23ce1126'/><circle cx='50' cy='50' r='15' fill='%23ce1126'/><text x='50' y='65' font-size='20' text-anchor='middle' fill='%23ffffff' font-family='Arial'>📱</text></svg>">
-
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --primary: #38bdf8;
-      --primary-dark: #0ea5e9;
-      --success: #34d399;
-      --success-dark: #10b981;
-      --danger: #f87171;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --radius: 20px;
-      --shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(135deg, #0b0f19 0%, var(--bg) 100%);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    header {
-      background: linear-gradient(90deg, #0ea5e9, #0d9488);
-      padding: 32px 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    header h1 {
-      font-size: 2.1rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    header p {
-      font-size: 1rem;
-      opacity: 0.95;
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    .content {
-      padding: 28px;
-    }
-
-    .control-group {
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    select, input {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid #334155;
-      border-radius: 14px;
-      color: var(--text);
-      font-size: 1.05rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    select:focus, input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
-    }
-
-    .btn-group {
-      display: grid;
-      gap: 14px;
-      margin: 26px 0;
-    }
-
-    .btn {
-      padding: 14px;
-      font-weight: 600;
-      font-size: 1.05rem;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-      color: #000;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(56, 189, 248, 0.3);
-    }
-
-    .btn-success {
-      background: linear-gradient(90deg, var(--success), var(--success-dark));
-      color: #000;
-    }
-
-    .btn-success:hover:not(:disabled) {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(52, 211, 157, 0.3);
-    }
-
-    .btn-clear {
-      background: rgba(248, 113, 113, 0.15);
-      color: var(--text);
-      border: 1px solid var(--danger);
-    }
-
-    .btn-clear:hover:not(:disabled) {
-      background: rgba(248, 113, 113, 0.25);
-    }
-
-    #listResult {
-      margin-top: 20px;
-      padding: 20px;
-      background: rgba(0,0,0,0.25);
-      border-radius: 16px;
-      font-family: 'Consolas', monospace;
-      font-size: 1.1rem;
-      line-height: 1.7;
-      white-space: pre-wrap;
-      max-height: 320px;
-      overflow-y: auto;
-      border: 1px solid #334155;
-      display: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      column-count: 1;
-    }
-
-    @media (min-width: 600px) {
-      #listResult {
-        column-count: 2;
-        column-gap: 20px;
-      }
-    }
-
-    .counter {
-      text-align: right;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) scale(0);
-      background: var(--success);
-      color: #000;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transition: transform 0.3s ease;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) scale(1);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>🇨🇺 CubaDial</h1>
-      <p>móviles cubanos</p>
+      <div class="logo-container">
+        <svg class="logo" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+          <circle cx='50' cy='50' r='45' fill='%23002a8f'/>
+          <rect x='0' y='0' width='100' height='50' fill='%23ffffff'/>
+          <path d='M30,25 L70,25 L70,35 L30,35 Z' fill='%23ce1126'/>
+          <circle cx='50' cy='50' r='15' fill='%23ce1126'/>
+          <text x='50' y='65' font-size='20' text-anchor='middle' fill='%23ffffff' font-family='Arial'>📱</text>
+        </svg>
+        <div class="logo-text">
+          <h1>CubaDial</h1>
+          <p>móviles cubanos</p>
+        </div>
+      </div>
     </header>
 
     <div class="content">
@@ -239,9 +43,12 @@
       </div>
 
       <div class="control-group">
-        <label for="count">Cantidad (1–100)</label>
-        <input type="number" id="count" min="1" max="100" value="10" />
-        <div class="counter"><span id="counter">10</span>/100</div>
+        <label for="count">Cantidad (1–1000)</label>
+        <input type="range" id="count" min="1" max="1000" value="10" />
+        <div class="counter-container">
+          <span id="counter">10</span>
+          <div class="counter"><span id="counter">10</span>/1000</div>
+        </div>
       </div>
 
       <div class="btn-group">
@@ -265,116 +72,6 @@
 
   <div id="toast" class="toast">¡Listado copiado al portapapeles!</div>
 
-  <script>
-    const prefixSelect = document.getElementById('prefix');
-    const countInput = document.getElementById('count');
-    const counterEl = document.getElementById('counter');
-    const generateBtn = document.getElementById('generateBtn');
-    const copyListBtn = document.getElementById('copyListBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const listResult = document.getElementById('listResult');
-    const toast = document.getElementById('toast');
-
-    let generatedNumbers = [];
-
-    countInput.addEventListener('input', () => {
-      let val = parseInt(countInput.value) || 0;
-      if (val < 1) val = 1;
-      if (val > 100) val = 100;
-      countInput.value = val;
-      counterEl.textContent = val;
-    });
-
-    function generateMobileNumber() {
-      const prefix = prefixSelect.value;
-      let start;
-      if (prefix === 'random') {
-        start = `5${Math.floor(Math.random() * 10)}`;
-      } else {
-        start = prefix;
-      }
-      let suffix = '';
-      for (let i = 0; i < 6; i++) {
-        suffix += Math.floor(Math.random() * 10);
-      }
-      return start + suffix; // 8 dígitos
-    }
-
-    function showToast() {
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-
-    async function copyToClipboard(text) {
-      try {
-        if (navigator.clipboard) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          const el = document.createElement('textarea');
-          el.value = text;
-          el.setAttribute('readonly', '');
-          el.style.position = 'absolute';
-          el.style.left = '-9999px';
-          document.body.appendChild(el);
-          el.select();
-          document.execCommand('copy');
-          document.body.removeChild(el);
-        }
-        showToast();
-      } catch (err) {
-        console.error('Error al copiar:', err);
-      }
-    }
-
-    function downloadVCF(numbers) {
-      let vcf = '';
-      numbers.forEach((num, i) => {
-        vcf += `BEGIN:VCARD\nVERSION:3.0\nFN:CubaDial ${i + 1}\nTEL;TYPE=CELL:${num}\nEND:VCARD\n\n`;
-      });
-      const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'cubadial_premium_contactos.vcf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    generateBtn.addEventListener('click', () => {
-      const count = parseInt(countInput.value, 10);
-      if (isNaN(count) || count < 1 || count > 100) return;
-
-      generatedNumbers = Array.from({ length: count }, () => `+53 ${generateMobileNumber()}`);
-      listResult.textContent = generatedNumbers.join('\n');
-      listResult.style.display = 'block';
-      copyListBtn.disabled = false;
-      exportBtn.disabled = false;
-      clearBtn.disabled = false;
-    });
-
-    copyListBtn.addEventListener('click', () => {
-      if (generatedNumbers.length > 0) {
-        copyToClipboard(generatedNumbers.join('\n'));
-      }
-    });
-
-    exportBtn.addEventListener('click', () => {
-      if (generatedNumbers.length > 0) {
-        downloadVCF(generatedNumbers);
-      }
-    });
-
-    clearBtn.addEventListener('click', () => {
-      generatedNumbers = [];
-      listResult.style.display = 'none';
-      listResult.textContent = '';
-      copyListBtn.disabled = true;
-      exportBtn.disabled = true;
-      clearBtn.disabled = true;
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
