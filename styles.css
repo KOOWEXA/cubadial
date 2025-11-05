@@ -338,3 +338,28 @@ select:focus, input:focus {
   width: 0%;
   transition: width 0.3s ease;
 }
+
+/* Nuevos estilos para el logo CD */
+.logo-text p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+/* Responsive mejoras */
+@media (max-width: 480px) {
+  .logo-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .logo-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+}
