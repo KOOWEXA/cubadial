@@ -4,28 +4,250 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CubaDial</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23002a8f'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='%23ffffff' font-family='Arial, sans-serif' font-weight='bold'>CD</text></svg>">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --primary: #38bdf8;
+      --primary-dark: #0ea5e9;
+      --success: #34d399;
+      --success-dark: #10b981;
+      --danger: #f87171;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(90deg, #0ea5e9, #0d9488);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    select, input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid #334155;
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+
+    .counter-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .btn-group {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 12px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #000;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background: var(--success-dark);
+    }
+
+    .btn-clear {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--text);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-clear:hover:not(:disabled) {
+      background: rgba(248, 113, 113, 0.25);
+    }
+
+    #listResult {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0,0,0,0.25);
+      border-radius: var(--radius);
+      font-family: 'Consolas', monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #334155;
+      display: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: var(--danger);
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo-container">
-        <svg class="logo" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-          <defs>
-            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#002a8f" />
-              <stop offset="100%" stop-color="#0055cc" />
-            </linearGradient>
-          </defs>
-          <rect width="100" height="100" rx="20" fill="url(#logoGradient)"/>
-          <text x="50" y="68" font-size="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold">CD</text>
-        </svg>
-        <div class="logo-text">
-          <h1>CubaDial</h1>
-          <p>Generador de números móviles cubanos</p>
-        </div>
+  <!-- Modal de autenticación -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <h2>Acceso a CubaDial</h2>
+      <p>Ingrese la clave de acceso:</p>
+      <input type="password" id="passwordInput" placeholder="Clave de acceso" />
+      <div id="passwordError" class="error">Clave incorrecta. Intente nuevamente.</div>
+      <div class="btn-group" style="margin-top: 20px;">
+        <button id="submitPassword" class="btn btn-primary">Acceder</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Aplicación principal (oculta inicialmente) -->
+  <div class="container" id="mainApp" style="display: none;">
+    <header>
+      <svg class="logo" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+        <defs>
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#002a8f" />
+            <stop offset="100%" stop-color="#0055cc" />
+          </linearGradient>
+        </defs>
+        <rect width="100" height="100" rx="20" fill="url(#logoGradient)"/>
+        <text x="50" y="68" font-size="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold">CD</text>
+      </svg>
     </header>
 
     <div class="content">
@@ -76,6 +298,189 @@
 
   <div id="toast" class="toast">¡Listado copiado al portapapeles!</div>
 
-  <script src="script.js"></script>
+  <script>
+    // Elementos del DOM
+    const authModal = document.getElementById('authModal');
+    const mainApp = document.getElementById('mainApp');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordError = document.getElementById('passwordError');
+    const submitPassword = document.getElementById('submitPassword');
+    
+    const prefixSelect = document.getElementById('prefix');
+    const countInput = document.getElementById('count');
+    const counterEl = document.getElementById('counter');
+    const generateBtn = document.getElementById('generateBtn');
+    const copyListBtn = document.getElementById('copyListBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const listResult = document.getElementById('listResult');
+    const toast = document.getElementById('toast');
+
+    let generatedNumbers = [];
+    const CORRECT_PASSWORD = '2244';
+
+    // Autenticación
+    submitPassword.addEventListener('click', () => {
+      if (passwordInput.value === CORRECT_PASSWORD) {
+        authModal.style.display = 'none';
+        mainApp.style.display = 'block';
+      } else {
+        passwordError.style.display = 'block';
+        passwordInput.value = '';
+      }
+    });
+
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        submitPassword.click();
+      }
+    });
+
+    // Funcionalidad principal
+    countInput.addEventListener('input', () => {
+      let val = parseInt(countInput.value) || 0;
+      if (val < 1) val = 1;
+      if (val > 1000) val = 1000;
+      countInput.value = val;
+      counterEl.textContent = val;
+    });
+
+    function generateMobileNumber() {
+      const prefix = prefixSelect.value;
+      let start;
+      
+      if (prefix === 'random') {
+        const prefixes = ['50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
+        start = prefixes[Math.floor(Math.random() * prefixes.length)];
+      } else {
+        start = prefix;
+      }
+      
+      let suffix = '';
+      for (let i = 0; i < 6; i++) {
+        suffix += Math.floor(Math.random() * 10);
+      }
+      
+      return start + suffix;
+    }
+
+    function showToast(message = '¡Listado copiado al portapapeles!') {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const el = document.createElement('textarea');
+          el.value = text;
+          el.setAttribute('readonly', '');
+          el.style.position = 'absolute';
+          el.style.left = '-9999px';
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+        }
+        showToast();
+      } catch (err) {
+        console.error('Error al copiar:', err);
+        showToast('Error al copiar al portapapeles');
+      }
+    }
+
+    function generateUniqueId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    function downloadVCF(numbers) {
+      const uniqueId = generateUniqueId();
+      let vcf = '';
+      numbers.forEach((num, i) => {
+        vcf += `BEGIN:VCARD\nVERSION:3.0\nFN:CubaDial ${i + 1}\nTEL;TYPE=CELL:${num}\nUID:${uniqueId}-${i}\nEND:VCARD\n\n`;
+      });
+      const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cubadial_contactos_${uniqueId}.vcf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Archivo VCF descargado');
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const count = parseInt(countInput.value, 10);
+      if (isNaN(count) || count < 1 || count > 1000) return;
+
+      generatedNumbers = [];
+      for (let i = 0; i < count; i++) {
+        generatedNumbers.push(`+53 ${generateMobileNumber()}`);
+      }
+      
+      listResult.textContent = generatedNumbers.join('\n');
+      listResult.style.display = 'block';
+      
+      copyListBtn.disabled = false;
+      exportBtn.disabled = false;
+      clearBtn.disabled = false;
+      
+      showToast(`${count} números generados exitosamente`);
+    });
+
+    copyListBtn.addEventListener('click', () => {
+      if (generatedNumbers.length > 0) {
+        copyToClipboard(generatedNumbers.join('\n'));
+      }
+    });
+
+    exportBtn.addEventListener('click', () => {
+      if (generatedNumbers.length > 0) {
+        downloadVCF(generatedNumbers);
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      generatedNumbers = [];
+      listResult.style.display = 'none';
+      listResult.textContent = '';
+      copyListBtn.disabled = true;
+      exportBtn.disabled = true;
+      clearBtn.disabled = true;
+    });
+
+    // Atajos de teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+          case 'g':
+            e.preventDefault();
+            generateBtn.click();
+            break;
+          case 'c':
+            if (!copyListBtn.disabled) {
+              e.preventDefault();
+              copyListBtn.click();
+            }
+            break;
+          case 'e':
+            if (!exportBtn.disabled) {
+              e.preventDefault();
+              exportBtn.click();
+            }
+            break;
+        }
+      }
+      
+      if (e.key === 'Escape') {
+        clearBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>
